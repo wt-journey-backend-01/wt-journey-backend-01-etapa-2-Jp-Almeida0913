@@ -11,5 +11,5 @@ app.use(agentesRouter);
 app.use(casosRouter);
 
 app.listen(PORT, () =>{
-    console.log(`Servidor do Departamento de Polícia rodande em localhost:${PORT}`);
+    console.log(`Servidor do Departamento de Polícia rodando em localhost:${PORT}`);
 })

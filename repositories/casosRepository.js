@@ -1,3 +1,5 @@
+const {v4: uuidv4} = require(`uuid`)
+
 const casos = [
     {
         id: "f5fb2ad5-22a8-4cb4-90f2-8733517a0d46",
@@ -13,6 +15,13 @@ function findAll(){
     return casos;
 };
 
+function create(caso){
+    const novoCaso = {id: uuidv4(), ...caso};
+    casos.push(novoCaso);
+    return novoCaso;
+}
+
 module.exports = {
-    findAll
+    findAll,
+    create,
 };
