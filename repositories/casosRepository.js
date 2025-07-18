@@ -13,7 +13,11 @@ const casos = [
 
 function findAll(){
     return casos;
-};
+}
+
+function findById(id){
+    return casos.find(casos => casos.id === id);
+}
 
 function create(caso){
     const novoCaso = {id: uuidv4(), ...caso};
@@ -21,7 +25,27 @@ function create(caso){
     return novoCaso;
 }
 
+function update(id, novosDados){
+    const index = casos.findIndex(caso => caso.id === id);
+    if (index === -1) return null;
+
+    casos[index] = {...casos[index], ...novosDados};
+    return casos[index];
+}
+
+function remove(id){
+    const index = casos.findIndex(caso => caso.id === id);
+    if (index === -1) return null;
+
+    const removido = casos.splice(index, 1);
+    return removido[0];
+}
+
+
 module.exports = {
     findAll,
+    findById,
     create,
+    update,
+    remove,
 };

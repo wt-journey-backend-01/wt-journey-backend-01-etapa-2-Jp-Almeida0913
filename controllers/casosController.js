@@ -9,6 +9,19 @@ function getAllCasos(req, res) {
     res.json(casos);
 }
 
+
+function getCasosById(req, res){
+    const {id} = req.params;
+    const caso = casosRepository.findById(id);
+
+    if (!caso){
+        return res.status(404).json({message:`Caso não encontrado.`});
+    }
+
+    res.status(200).json(caso);
+}
+
+
 function createCaso(req, res){
     const{titulo, descricao, status, agente_id} = req.body;
 
@@ -48,7 +61,54 @@ function createCaso(req, res){
     res.status(201).json(novoCaso);
 }
 
+
+function atualizarCaso(req, res){
+    const {id} = req.params;
+    const novoCaso = req.body;
+
+    const atualizado = casosRepository.update(id, novoCaso);
+
+    if (!atualizado) {
+        return res.status(404).json({message:`Caso não encontrado.`});
+    }
+
+    res.status(200).json(atualizado)
+}
+
+
+function atualizarParcialCaso(req, res){
+    const {id} = req.params;
+    const campos = req.body;
+
+    const atualizado = casosRepository.update(id, campos);
+
+    if (!atualizado) {
+        return res.status(404).json({message:`Caso não encontrado.`});
+    }
+
+    res.status(200).json(atualizado)
+}
+
+
+function deletarCaso(req, res){
+    const {id} = req.params;
+
+    const removido = casosRepository.remove(id);
+
+    if(!removido){
+        return res.status(404).json({message:`Caso não encontrado.`});
+    }
+
+    res.status(204).send();
+}
+
+
+
 module.exports = {
     getAllCasos,
+    getCasosById,
     createCaso,
+    atualizarCaso,
+    atualizarParcialCaso,
+    deletarCaso,
 };
