@@ -3,10 +3,25 @@ const mensagemErro = `Campo Obrigatório!`;
 
 
 
-function getAllAgentes(req, res) {
-    const agentes = agentesRepository.findAll();
-    res.json(agentes);
-};
+function getAgentes(req, res) {
+    const { cargo, sort } = req.query;
+
+    let agentes = agentesRepository.findAll();
+
+    if (cargo) {
+        agentes = agentes.filter(a => a.cargo === cargo);
+    }
+
+    if (sort) {
+        if (sort === 'asc') {
+            agentes.sort((a, b) => new Date(a.dataDeIncorporacao) - new Date(b.dataDeIncorporacao));
+        } else if (sort === 'desc') {
+            agentes.sort((a, b) => new Date(b.dataDeIncorporacao) - new Date(a.dataDeIncorporacao));
+        }
+    }
+
+    return res.status(200).json(agentes);
+}
 
 
 function getAgenteById(req, res){
@@ -20,7 +35,6 @@ function getAgenteById(req, res){
 
     res.status(200).json(agente);
 }
-
 
 function createAgente(req, res){
     const {nome, dataDeIncorporacao, cargo} = req.body;
@@ -85,7 +99,7 @@ function deletarAgente(req, res){
 
 
 module.exports = {
-    getAllAgentes,
+    getAgentes,
     getAgenteById,
     createAgente,
     atualizarAgente,

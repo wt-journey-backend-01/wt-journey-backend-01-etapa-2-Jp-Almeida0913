@@ -4,11 +4,30 @@ const agentesRepository = require(`../repositories/agentesRepository`);
 const mensagemErro = `Campo Obrigatório!`;
 
 
-function getAllCasos(req, res) {
-    const casos = casosRepository.findAll();
-    res.json(casos);
-}
+function getCasos(req, res) {
+    const { tipo, status, sort } = req.query;
 
+    let casos = casosRepository.findAll();
+
+
+    if (tipo) {
+        casos = casos.filter(c => c.tipo === tipo);
+    }
+
+    if (status) {
+        casos = casos.filter(c => c.status === status);
+    }
+
+    if (sort) {
+        if (sort === 'asc') {
+            casos.sort((a, b) => new Date(a.data) - new Date(b.data));
+        } else if (sort === 'desc') {
+            casos.sort((a, b) => new Date(b.data) - new Date(a.data));
+        }
+    }
+
+    return res.status(200).json(casos);
+}
 
 function getCasosById(req, res){
     const {id} = req.params;
@@ -105,7 +124,7 @@ function deletarCaso(req, res){
 
 
 module.exports = {
-    getAllCasos,
+    getCasos,
     getCasosById,
     createCaso,
     atualizarCaso,
