@@ -12,14 +12,14 @@ const casos = [
     id: "2a3fa067-91d9-4971-a7ae-3e0d4971e093",
     titulo: "roubo a residência",
     descricao: "No dia 12/05/2018, uma residência no bairro Eldorado foi invadida por dois suspeitos armados. Vários bens foram levados.",
-    status: "em investigação",
+    status: "aberto",
     agente_id: "d4e3fc4a-9c5b-4cbe-9cc6-ded6e75ac711"
   },
   {
     id: "5c11e2f9-f8d9-40f5-83aa-0a50f622a7e1",
     titulo: "tráfico de drogas",
     descricao: "Após denúncia anônima, um ponto de venda de entorpecentes foi localizado e investigado no bairro Industrial.",
-    status: "fechado",
+    status: "solucionado",
     agente_id: "f7b9090f-25aa-47aa-a4f6-58f53fc09c3a"
   },
   {
@@ -33,7 +33,7 @@ const casos = [
     id: "cb65b8bc-8a61-4d5e-92d2-bbdcb7cfd04f",
     titulo: "fraude bancária",
     descricao: "Indivíduos usaram documentos falsos para abrir contas e realizar transferências ilegais no valor de R$ 200 mil.",
-    status: "em investigação",
+    status: "aberto",
     agente_id: "2e0ac303-7ee0-470e-98fb-c2901b839be7"
   }
 ]
