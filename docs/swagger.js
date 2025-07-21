@@ -1,18 +1,23 @@
-const swaggerJSDoc = require(`swagger-jsdoc`);
+// docs/swagger.js
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
-const options = {
-    definition: {
-        openapi: `3.0.0`,
-        info: {
-            title: `API do Departamento de Polícia`,
-            version: `1.0.0`,
-            description: `API para gerenciar agentes e casos da polícia`,
-        },
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API do Departamento de Polícia',
+      version: '1.0.0',
+      description: 'Documentação da API dos agentes e casos',
     },
-    apis: [`./routes/*.js`],
+  },
+  apis: ['./routes/*.js'], 
 };
 
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
-const swaggerSpec = swaggerJSDoc(options)
+function setupSwagger(app) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 
-module.exports = swaggerSpec;
+module.exports = setupSwagger;
