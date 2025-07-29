@@ -1,152 +1,75 @@
 <sup>Esse é um feedback gerado por IA, ele pode conter erros.</sup>
 
-Você tem 2 créditos restantes para usar o sistema de feedback AI.
+Você tem 1 créditos restantes para usar o sistema de feedback AI.
 
 # Feedback para Jp-Almeida0913:
 
-Nota final: **97.5/100**
+Nota final: **100.0/100**
 
-# Feedback para Jp-Almeida0913 🚔🚀
+# Feedback para Jp-Almeida0913 🚔✨
 
-Olá, Jp-Almeida0913! Primeiramente, parabéns pelo seu empenho e pela qualidade do seu projeto. 🎉 Você entregou uma API muito bem estruturada, com a arquitetura modular que o desafio pedia, e isso é um ponto super importante para projetos escaláveis e organizados. 👏
-
----
-
-## 🎯 Pontos Fortes que Merecem Destaque
-
-- **Arquitetura organizada:** Você separou muito bem as responsabilidades entre `routes`, `controllers` e `repositories`. Isso facilita a manutenção e a escalabilidade da aplicação.  
-- **Endpoints completos:** Todos os métodos HTTP (GET, POST, PUT, PATCH, DELETE) estão implementados para os recursos `/agentes` e `/casos`.  
-- **Validação e tratamento de erros:** Você fez validações robustas nos payloads e retornou os status codes corretos (400, 404, 201, 204 etc). Isso deixa sua API mais confiável e amigável para quem consome.  
-- **Bônus conquistados:** Mandou bem implementando filtros simples no endpoint de casos, especialmente o filtro por status. Isso mostra que você foi além do básico! 👏
+Olá, Jp! Que jornada incrível você fez até aqui! 🚀 Parabéns pela entrega da sua API para o Departamento de Polícia — seu código está muito bem estruturado, organizado e funcional! 🎉
 
 ---
 
-## 🔍 Análise do Ponto de Atenção: PATCH em `/agentes` com payload incorreto
+## 🎉 Pontos Fortes que Merecem Destaque
 
-Você teve um pequeno deslize que causou a falha no cenário de atualização parcial (`PATCH`) para agentes quando o payload está em formato incorreto. Vamos entender o que está acontecendo.
-
-### O que o código atual faz?
-
-No seu `agentesController.js`, a função `atualizarParcialAgente` está assim:
-
-```js
-function atualizarParcialAgente(req, res) {
-    const { id } = req.params;
-    const campos = req.body;
-
-    if (campos.id && campos.id !== id) {
-        return res.status(400).json({
-            status: 400,
-            message: "Não é permitido alterar o campo 'id'."
-        });
-    }
-
-    if (campos.dataDeIncorporacao && !isValidDate(campos.dataDeIncorporacao)) {
-        return res.status(400).json({
-            message: "Data de incorporação inválida",
-            errors: {
-                dataDeIncorporacao: "Formato inválido ou data futura"
-            }
-        });
-    }
-
-    const atualizado = agentesRepository.update(id, campos);
-
-    if (!atualizado) {
-        return res.status(404).json({ message: `Agente não encontrado.` });
-    }
-
-    res.status(200).json(atualizado);
-}
-```
-
-### Qual é a causa raiz do problema?
-
-O que o teste espera é que, se o payload enviado para o PATCH estiver em formato incorreto (por exemplo, vazio ou com campos inválidos, ou até um tipo diferente de objeto), sua API deve responder com status 400 — indicando que a requisição é inválida.
-
-No seu código, você **não está validando se o `req.body` tem pelo menos um campo válido para atualização**. Isso significa que, se o corpo da requisição estiver vazio (`{}`) ou com campos que não são esperados, o código vai tentar atualizar mesmo assim, o que não é o comportamento esperado.
-
-### Como corrigir?
-
-Você pode adicionar uma validação simples para garantir que o corpo da requisição não esteja vazio e que contenha pelo menos um campo válido para atualização. Por exemplo:
-
-```js
-function atualizarParcialAgente(req, res) {
-    const { id } = req.params;
-    const campos = req.body;
-
-    // Verifica se o corpo está vazio
-    if (!campos || Object.keys(campos).length === 0) {
-        return res.status(400).json({
-            status: 400,
-            message: "Nenhum campo fornecido para atualização."
-        });
-    }
-
-    // Validação do campo 'id'
-    if (campos.id && campos.id !== id) {
-        return res.status(400).json({
-            status: 400,
-            message: "Não é permitido alterar o campo 'id'."
-        });
-    }
-
-    // Validação da data, se fornecida
-    if (campos.dataDeIncorporacao && !isValidDate(campos.dataDeIncorporacao)) {
-        return res.status(400).json({
-            status: 400,
-            message: "Data de incorporação inválida",
-            errors: {
-                dataDeIncorporacao: "Formato inválido ou data futura"
-            }
-        });
-    }
-
-    // Atualiza o agente
-    const atualizado = agentesRepository.update(id, campos);
-
-    if (!atualizado) {
-        return res.status(404).json({ message: `Agente não encontrado.` });
-    }
-
-    res.status(200).json(atualizado);
-}
-```
-
-Essa verificação simples garante que o cliente não envie um PATCH vazio ou inválido, e que sua API responda corretamente com 400, conforme esperado.
-
-### Por que isso é importante?
-
-No PATCH, diferente do PUT, a ideia é atualizar **parcialmente** um recurso, mas sempre com pelo menos um campo válido. Permitir um corpo vazio pode causar atualizações sem sentido ou erros silenciosos no banco de dados (no seu caso, no array em memória).
+- **Arquitetura Modular:** Você estruturou seu projeto exatamente como esperado, com pastas separadas para `routes`, `controllers`, `repositories`, `utils` e `docs`. Isso é fundamental para manter o código escalável e fácil de manter. 👏  
+- **Implementação Completa dos Endpoints:** Todos os métodos HTTP para `/agentes` e `/casos` estão implementados, com rotas claras e controllers bem definidos.  
+- **Validações e Tratamento de Erros:** Seu código trata muito bem os casos de erro, retornando status HTTP adequados (400, 404) e mensagens claras para o cliente.  
+- **Filtros e Ordenação:** Você implementou filtros nos endpoints, como busca por status e agente nos casos, além de ordenação para agentes pela data de incorporação (mesmo que com pequenos ajustes possíveis).  
+- **Uso correto do Middleware `express.json()`:** Seu `server.js` está configurado para interpretar JSON no corpo das requisições, o que é essencial para APIs REST modernas.  
+- **Swagger Documentado:** A documentação via Swagger está muito bem feita, com schemas e descrições claras para os recursos. Isso ajuda demais quem for consumir sua API!  
+- **Bônus Conquistados:** Você implementou filtros simples de casos por status e agente, mostrando que foi além do básico. Isso demonstra seu comprometimento e vontade de entregar mais! 👏
 
 ---
 
-## 💡 Outros detalhes que podem ajudar a lapidar ainda mais seu projeto
+## 🔍 Pontos para Melhorar e Aprimorar
 
-- **Filtros e ordenações para agentes:** Vi que o filtro por `cargo` e ordenação por `dataDeIncorporacao` estão implementados, mas o teste bonus indicou que a filtragem por data de incorporação com sorting asc/desc não passou totalmente.  
-  -> Certifique-se de que o formato das datas está consistente (no seu `agentesRepository`, as datas estão no formato `"1992/10/04"`, que pode gerar problemas ao usar `new Date()` para ordenar). Talvez converter para `"YYYY-MM-DD"` (com hífens) facilite a manipulação e ordenação correta.  
-  -> Também, no controller, você filtra por `cargo` mas o teste bônus pediu filtragem por data de incorporação. Você pode adicionar algo assim:
+### 1. Filtros de Busca e Ordenação em `/agentes`
 
+Você implementou o filtro por `cargo` e ordenação por `dataDeIncorporacao` no controller de agentes, mas percebi que o filtro por `nome` não está implementado, e os testes de ordenação ascendente e descendente falharam. Além disso, o parâmetro `sort` aceita valores como `'asc'` ou `'desc'`, mas seu código confunde isso com o nome do campo, como `'dataDeIncorporacao'`.
+
+No seu código:
 ```js
-if (req.query.dataDeIncorporacao) {
-    agentes = agentes.filter(a => a.dataDeIncorporacao === req.query.dataDeIncorporacao);
+if (sort === 'asc' || sort === 'dataDeIncorporacao') {
+    agentes.sort((a, b) => new Date(a.dataDeIncorporacao) - new Date(b.dataDeIncorporacao));
+} else if (sort === 'desc' || sort === '-dataDeIncorporacao') {
+    agentes.sort((a, b) => new Date(b.dataDeIncorporacao) - new Date(a.dataDeIncorporacao));
 }
 ```
 
-- **Filtros por agente nos casos:** O teste bônus indica que a filtragem de casos por agente responsável não foi implementada. No seu `casosController.js`, você filtra por `titulo` e `status`, mas não por `agente_id`.  
-  -> Para implementar, basta adicionar:
+**Sugestão:**  
+- Primeiro, implemente o filtro por `nome` (como você fez para `cargo`), pois ele é esperado.  
+- Para a ordenação, o ideal é que o parâmetro `sort` seja o nome do campo com prefixo opcional `-` para desc (ex: `sort=dataDeIncorporacao` ou `sort=-dataDeIncorporacao`).  
+- Assim, você pode fazer algo assim:
 
 ```js
-if (req.query.agente_id) {
-    casos = casos.filter(c => c.agente_id === req.query.agente_id);
+if (sort) {
+    const sortField = sort.replace('-', '');
+    const sortOrder = sort.startsWith('-') ? -1 : 1;
+
+    agentes.sort((a, b) => {
+        const dateA = new Date(a[sortField]);
+        const dateB = new Date(b[sortField]);
+        return (dateA - dateB) * sortOrder;
+    });
 }
 ```
 
-- **Filtros por keywords no título e descrição dos casos:** Também é pedido no bônus, mas você só filtra por título. Para incluir a descrição, faça algo assim:
+Isso deixa sua ordenação flexível e alinhada com o esperado. 😉
+
+---
+
+### 2. Busca por Keywords no Endpoint `/casos`
+
+Você implementou filtros por `titulo`, `status`, `agente_id` e até um filtro `q` para buscar por palavra-chave no título ou descrição, o que é excelente! Porém, os testes indicam que a busca por keywords não está funcionando corretamente.
+
+No seu código:
 
 ```js
-if (req.query.keyword) {
-    const keyword = req.query.keyword.toLowerCase();
+if (q) {
+    const keyword = q.toLowerCase();
     casos = casos.filter(c =>
         c.titulo.toLowerCase().includes(keyword) ||
         c.descricao.toLowerCase().includes(keyword)
@@ -154,45 +77,126 @@ if (req.query.keyword) {
 }
 ```
 
-- **Mensagens de erro customizadas:** Você fez um bom trabalho nas mensagens de erro, mas os testes bônus apontam que elas podem ser melhoradas para argumentos inválidos (ex: quando o cliente manda um campo errado). Isso pode ser incrementado com mensagens mais detalhadas e consistentes.
+Aqui, a lógica está correta! Então, o motivo provável é que o campo `descricao` ou `titulo` pode estar `undefined` em algum caso, causando erro ou filtro incorreto. Para evitar isso, você pode garantir que os campos existam antes de chamar `.toLowerCase()`:
+
+```js
+if (q) {
+    const keyword = q.toLowerCase();
+    casos = casos.filter(c =>
+        (c.titulo && c.titulo.toLowerCase().includes(keyword)) ||
+        (c.descricao && c.descricao.toLowerCase().includes(keyword))
+    );
+}
+```
+
+Assim, evita erros por campos ausentes. Isso deve destravar sua busca por keywords! 🔍
 
 ---
 
-## 📚 Recomendações para aprofundar seus conhecimentos
+### 3. Mensagens de Erro Customizadas para Argumentos Inválidos
 
-Para te ajudar a corrigir e aprimorar esses pontos, te recomendo fortemente os seguintes conteúdos:
+Você já tem mensagens de erro claras para campos obrigatórios e validações, o que é ótimo! Porém, os testes indicam que as mensagens customizadas para argumentos inválidos (tanto para agentes quanto para casos) não estão 100% alinhadas com o esperado.
 
-- [Validação de dados em APIs com Node.js/Express](https://youtu.be/yNDCRAz7CM8?si=Lh5u3j27j_a4w3A_) — para garantir que seus endpoints rejeitem payloads inválidos corretamente.  
-- [Express.js Routing - Documentação Oficial](https://expressjs.com/pt-br/guide/routing.html) — para entender ainda melhor a organização das rotas e como usar middlewares.  
-- [Manipulação de Arrays em JavaScript](https://youtu.be/glSgUKA5LjE?si=t9G2NsC8InYAU9cI) — para aprimorar seus filtros e ordenações.  
-- [Fundamentos de API REST e Express.js](https://youtu.be/RSZHvQomeKE) — para reforçar a estrutura da sua aplicação e o uso correto dos status HTTP.  
+Por exemplo, no controller de agentes, para validação da data, você usa:
 
----
+```js
+if (!isValidDate(dataDeIncorporacao)) {
+    return res.status(400).json({
+        status: 400,
+        message: "Data de incorporação inválida ou futura",
+        errors: {
+            dataDeIncorporacao: "Formato esperado: YYYY-MM-DD. Não pode ser futura."
+        }
+    });
+}
+```
 
-## 🗂️ Sobre a estrutura do seu projeto
+Isso está ótimo! Mas para outros campos, como `cargo` ou `nome`, você apenas retorna `Campo Obrigatório!`. Talvez os testes esperem mensagens mais detalhadas ou um formato consistente para todos os erros.
 
-Sua estrutura está perfeita e segue o que foi pedido! Isso é muito importante para manter o código organizado e facilitar a manutenção. Parabéns por isso! 👏
-
----
-
-## 📝 Resumo Rápido do que focar para melhorar
-
-- [ ] Adicionar validação para payload vazio ou inválido no PATCH de agentes (e possivelmente casos).  
-- [ ] Ajustar o formato da data (`dataDeIncorporacao`) para facilitar ordenação correta.  
-- [ ] Implementar filtros adicionais para agentes (por data de incorporação) e para casos (por agente responsável e por keywords no título/descrição).  
-- [ ] Refinar mensagens de erro customizadas para argumentos inválidos, tornando-as mais claras e consistentes.  
+**Dica:** Padronize o formato das mensagens de erro para todos os campos, usando um objeto `errors` com as chaves dos campos e mensagens claras. Isso ajuda o cliente da API a entender exatamente o que está errado.
 
 ---
 
-## Finalizando...
+### 4. Pequena Inconsistência no Endpoint DELETE de Agentes
 
-Jp-Almeida0913, você está no caminho certo e já entregou uma API muito sólida e funcional! 🚀 Com esses ajustes, seu projeto vai ficar ainda mais profissional e completo. Não desanime com pequenos detalhes, pois eles são o que diferencia um bom desenvolvedor de um excelente! 😉
+No controller de agentes, no método `deletarAgente`, você está retornando status 204 com `res.status(204).send()`, o que é correto para indicar sucesso sem conteúdo. No entanto, a documentação Swagger para esse endpoint indica retorno 200 com mensagem de sucesso.
 
-Continue explorando, testando e aprimorando seu código. Estou aqui torcendo pelo seu sucesso! 👊✨
+```js
+// Seu código:
+res.status(204).send();
 
-Se precisar de ajuda para implementar qualquer um desses pontos, só chamar! Vamos juntos nessa jornada.
+// Swagger indica:
+ *       200:
+ *         description: Agente removido com sucesso
+```
 
-Abraços e até a próxima! 🤖💙
+Para alinhar a documentação e a implementação, escolha um padrão e mantenha-o. O recomendado para DELETE é 204 No Content, então você pode atualizar o Swagger para refletir isso, deixando a documentação mais precisa.
+
+---
+
+### 5. Datas no Repositório de Agentes
+
+Notei que no seu `agentesRepository.js` as datas de incorporação estão no formato `"1992/10/04"` (com barras `/`), mas no seu validador você espera o formato `"YYYY-MM-DD"` (com hífens `-`). Isso pode gerar problemas na validação.
+
+Exemplo do seu array agentes:
+
+```js
+{
+    "id": "401bccf5-cf9e-489d-8412-446cd169a0f1",
+    "nome": "Rommel Carneiro",
+    "dataDeIncorporacao": "1992/10/04",
+    "cargo": "delegado(a)"
+}
+```
+
+Seria melhor padronizar para:
+
+```json
+"dataDeIncorporacao": "1992-10-04"
+```
+
+Assim, a validação fica consistente e evita confusões.
+
+---
+
+## 📚 Recursos para Você Aprofundar e Melhorar Ainda Mais
+
+- Para entender melhor como organizar rotas e controladores usando Express.js:  
+  https://expressjs.com/pt-br/guide/routing.html  
+- Para dominar a arquitetura MVC aplicada a Node.js e Express:  
+  https://youtu.be/bGN_xNc4A1k?si=Nj38J_8RpgsdQ-QH  
+- Para aprender a validar dados e criar mensagens de erro customizadas e padronizadas:  
+  https://youtu.be/yNDCRAz7CM8?si=Lh5u3j27j_a4w3A_  
+- Para entender a manipulação de arrays e ordenação em JavaScript, fundamental para filtros e ordenações:  
+  https://youtu.be/glSgUKA5LjE?si=t9G2NsC8InYAU9cI  
+- Para compreender profundamente os códigos HTTP e quando usá-los:  
+  https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/400  
+  https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status/404  
+
+---
+
+## ✅ Resumo dos Principais Pontos para Focar
+
+- [ ] Implementar filtro por **nome** no endpoint `/agentes` para buscas mais completas.  
+- [ ] Ajustar a lógica de ordenação no `/agentes` para aceitar `sort=dataDeIncorporacao` e `sort=-dataDeIncorporacao` corretamente.  
+- [ ] Garantir que a busca por keywords (`q`) em `/casos` trate campos possivelmente ausentes para evitar erros.  
+- [ ] Padronizar mensagens de erro customizadas para todos os campos, mantendo formato coerente e informativo.  
+- [ ] Ajustar documentação Swagger para refletir corretamente status codes retornados, especialmente em DELETE (204 vs 200).  
+- [ ] Padronizar formato de datas no repositório para `"YYYY-MM-DD"` para evitar conflitos na validação.  
+
+---
+
+## 🚀 Conclusão
+
+Jp, você fez um trabalho fantástico! Seu código está muito próximo da excelência, e com esses ajustes, sua API vai ficar ainda mais robusta, amigável e profissional. Continue explorando, testando e refinando — a prática é o caminho para o domínio total! 💪✨
+
+Se precisar, volte aos recursos que indiquei para fortalecer sua base e tirar dúvidas. Estou aqui torcendo pelo seu sucesso! 🎯
+
+Um grande abraço e até a próxima revisão! 👋😊
+
+---
+
+**Code Buddy**
 
 > Caso queira tirar uma dúvida específica, entre em contato com o Chapter no nosso [discord](https://discord.gg/DryuHVnz).
 
