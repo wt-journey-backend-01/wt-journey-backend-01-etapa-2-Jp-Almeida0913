@@ -1,12 +1,10 @@
 const casosRepository = require(`../repositories/casosRepository`);
 const agentesRepository = require(`../repositories/agentesRepository`);
 
-
 const mensagemErro = `Campo Obrigatório!`;
 
-
 function getCasos(req, res) {
-    const { titulo, status, sort } = req.query;
+    const { titulo, status, sort, agente_id, q } = req.query;
 
     let casos = casosRepository.findAll();
 
@@ -18,6 +16,18 @@ function getCasos(req, res) {
         casos = casos.filter(c => c.status === status);
     }
 
+    if (agente_id) {
+        casos = casos.filter(c => c.agente_id === agente_id);
+    }
+
+    if (q) {
+        const keyword = q.toLowerCase();
+        casos = casos.filter(c =>
+            c.titulo.toLowerCase().includes(keyword) ||
+            c.descricao.toLowerCase().includes(keyword)
+        );
+    }
+
     if (sort === 'asc') {
         casos.sort((a, b) => new Date(a.data) - new Date(b.data));
     } else if (sort === 'desc') {
@@ -26,7 +36,6 @@ function getCasos(req, res) {
 
     return res.status(200).json(casos);
 }
-
 
 function getCasosById(req, res) {
     const { id } = req.params;
@@ -38,7 +47,6 @@ function getCasosById(req, res) {
 
     res.status(200).json(caso);
 }
-
 
 function createCaso(req, res) {
     const { titulo, descricao, status, agente_id } = req.body;
@@ -55,7 +63,6 @@ function createCaso(req, res) {
             },
         });
     }
-
 
     if (status !== `aberto` && status !== `solucionado`) {
         return res.status(400).json({
@@ -79,7 +86,6 @@ function createCaso(req, res) {
     const novoCaso = casosRepository.create({ titulo, descricao, status, agente_id });
     res.status(201).json(novoCaso);
 }
-
 
 function atualizarCaso(req, res) {
     const { id } = req.params;
@@ -131,7 +137,6 @@ function atualizarCaso(req, res) {
     res.status(200).json(atualizado);
 }
 
-
 function atualizarParcialCaso(req, res) {
     const { id } = req.params;
     const campos = req.body;
@@ -171,7 +176,6 @@ function atualizarParcialCaso(req, res) {
     res.status(200).json(atualizado);
 }
 
-
 function deletarCaso(req, res) {
     const { id } = req.params;
 
@@ -183,7 +187,6 @@ function deletarCaso(req, res) {
 
     res.status(204).send();
 }
-
 
 module.exports = {
     getCasos,

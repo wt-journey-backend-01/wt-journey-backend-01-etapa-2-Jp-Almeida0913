@@ -11,9 +11,9 @@ function getAgentes(req, res) {
         agentes = agentes.filter(a => a.cargo === cargo);
     }
 
-    if (sort === 'asc') {
+    if (sort === 'asc' || sort === 'dataDeIncorporacao') {
         agentes.sort((a, b) => new Date(a.dataDeIncorporacao) - new Date(b.dataDeIncorporacao));
-    } else if (sort === 'desc') {
+    } else if (sort === 'desc' || sort === '-dataDeIncorporacao') {
         agentes.sort((a, b) => new Date(b.dataDeIncorporacao) - new Date(a.dataDeIncorporacao));
     }
 
@@ -109,6 +109,17 @@ function atualizarParcialAgente(req, res) {
         return res.status(400).json({
             status: 400,
             message: "Não é permitido alterar o campo 'id'."
+        });
+    }
+
+    const camposPermitidos = ['nome', 'dataDeIncorporacao', 'cargo'];
+    const camposValidos = Object.keys(campos).filter(key => camposPermitidos.includes(key));
+
+    if (!campos || camposValidos.length === 0) {
+        return res.status(400).json({
+            status: 400,
+            message: "Nenhum campo válido fornecido para atualização.",
+            errors: campos
         });
     }
 
